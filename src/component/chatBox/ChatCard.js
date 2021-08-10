@@ -2,21 +2,22 @@ import React, { useState, useEffect, useContext } from "react";
 import { FaAddressCard } from "react-icons/fa";
 import { getMsg, getUser } from "../../pages/helper/homeHelper";
 import { UserContext } from "../../context/UserContext";
-import { SET_CONV } from "../../context/actions.types";
+import { SET_MSG } from "../../context/actions.types";
 
-const ChatCard = ({ receiverName }) => {
+const ChatCard = ({ currrentConv }) => {
   const [user, setUser] = useState({});
   const { dispatch } = useContext(UserContext);
   const { userId } = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    getUser(receiverName.receiverId).then((data) => setUser(data));
+    // console.log(currrentConv);
+    getUser(currrentConv.receiverId).then((data) => setUser(data));
   }, []);
 
   const onClickConv = () => {
-    getMsg(userId).then((data) => {
+    getMsg(currrentConv.id).then((data) => {
       dispatch({
-        type: SET_CONV,
+        type: SET_MSG,
         payload: data,
       });
     });

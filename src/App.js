@@ -5,7 +5,8 @@ import React, { useReducer } from "react";
 import { UserContext } from "./context/UserContext";
 
 const initialState = {
-  conversation: [],
+  message: [],
+  activeUsers: [],
 };
 
 function App() {

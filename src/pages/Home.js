@@ -1,17 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { SOCKETIO } from "../backend";
+import { io } from "socket.io-client";
 import ChatBox from "../component/chatBox/ChatBox";
 import MsgBox from "../component/msgBox/MsgBox";
 import Sidebar from "../component/sidebar/Sidebar";
 import Header from "../layout/Header";
 import { getConv } from "./helper/homeHelper";
+import { SET_USERS } from "../context/actions.types";
+const socket = io.connect(SOCKETIO);
 
 const Home = () => {
+  const { dispatch } = useContext(UserContext);
   var { userId } = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    socket.emit("addUser", userId);
+
+    socket.on("activeUsers", (users) => {
+      dispatch({
+        type: SET_USERS,
+        payload: users,
+      });
+    });
+  }, []);
+
   const [conv, setConv] = useState([]);
   useEffect(() => {
-    getConv("1").then((data) => {
+    getConv(userId).then((data) => {
       setConv(data);
     });
+  }, []);
+
+  useEffect(() => {
+    // socket.on('')
   }, []);
 
   return (
@@ -25,7 +47,7 @@ const Home = () => {
           <ChatBox conv={conv} />
         </div>
         <div className='col-span-8'>
-          <MsgBox />
+          <MsgBox socket={socket} />
         </div>
       </div>
     </div>

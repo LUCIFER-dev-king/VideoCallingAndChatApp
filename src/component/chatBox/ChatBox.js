@@ -7,7 +7,7 @@ const ChatBox = ({ conv }) => {
       <div className='p-5 text-2xl font-bold'>Chat</div>
       <hr />
       {conv.map((c, i) => (
-        <ChatCard key={i} receiverName={c} />
+        <ChatCard key={i} currrentConv={c} />
       ))}
     </div>
   );

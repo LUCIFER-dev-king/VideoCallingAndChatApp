@@ -12,7 +12,6 @@ export const getUser = (id) => {
   })
     .then((res) => {
       if (res.status === 200) {
-        console.log(res.data);
         return res.data;
       }
     })

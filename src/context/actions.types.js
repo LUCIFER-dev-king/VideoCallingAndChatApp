@@ -1,1 +1,2 @@
-export const SET_CONV = "SET_CONV";
+export const SET_MSG = "SET_MSG";
+export const SET_USERS = "SET_USERS";
