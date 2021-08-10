@@ -11,7 +11,11 @@ const ChatCard = ({ currrentConv }) => {
 
   useEffect(() => {
     // console.log(currrentConv);
-    getUser(currrentConv.receiverId).then((data) => setUser(data));
+    if (userId == currrentConv.receiverId) {
+      getUser(currrentConv.UserId).then((data) => setUser(data));
+    } else {
+      getUser(currrentConv.receiverId).then((data) => setUser(data));
+    }
   }, []);
 
   const onClickConv = () => {

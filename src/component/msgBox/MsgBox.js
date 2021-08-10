@@ -3,38 +3,62 @@ import MsgBoxCard from "./MsgBoxCard";
 import MsgBoxHeader from "./MsgBoxHeader";
 import { UserContext } from "../../context/UserContext";
 import { createMsg } from "../../pages/helper/homeHelper";
+import { SET_MSG } from "../../context/actions.types";
 
 const MsgBox = ({ socket }) => {
-  const { state } = useContext(UserContext);
+  const { state, dispatch } = useContext(UserContext);
   const { message, activeUsers } = state;
   const [msg, setMsg] = useState("");
   const [isUserActive, setIsUserActive] = useState({});
   const { userId } = JSON.parse(localStorage.getItem("user"));
+  const [receiverId, setReceiverId] = useState("");
 
   useEffect(() => {
     if (message.length > 0) {
-      activeUsers.find((user) => {
+      var user = activeUsers.find((user) => {
         if (user.userId == message[0].receiverId) {
-          setIsUserActive(user);
+          return user;
         }
       });
+      if (user) {
+        setIsUserActive(user);
+      } else {
+        setIsUserActive({});
+      }
+      //TODO: what happens if we send the message without early msgs. SOL: set receiverid to context.
+      if (userId == message[0].senderId) {
+        setReceiverId(message[0].receiverId);
+      } else {
+        setReceiverId(message[0].senderId);
+      }
     }
   }, [message, activeUsers]);
 
   const onSubmit = () => {
-    // createMsg({
-    //   conversationId: message[0].id,
-    //   message: msg,
-    //   senderId: userId,
-    // });
-    socket.emit("sendMsg", {
+    var newMessage = {
+      senderId: userId,
+      receiverId: receiverId,
       message: msg,
-      receiverSocketId: isUserActive.socketId,
+      ConversationId: message[0].id,
+      createdAt: new Date().toTimeString(),
+    };
+    dispatch({
+      type: SET_MSG,
+      payload: [...message, newMessage],
     });
+    createMsg(newMessage);
+    socket.emit("sendMsg", [...message, newMessage]);
+    // console.log(new Date().toTimeString());
   };
 
   useEffect(() => {
-    socket.on("getMsg", (msg) => console.log(msg));
+    socket.on("getMsg", (msg) => {
+      dispatch({
+        type: SET_MSG,
+        payload: msg,
+      });
+    });
+    console.log(message);
   }, []);
 
   return (
