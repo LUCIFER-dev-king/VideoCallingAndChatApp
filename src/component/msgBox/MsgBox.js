@@ -35,20 +35,26 @@ const MsgBox = ({ socket }) => {
   }, [message, activeUsers]);
 
   const onSubmit = () => {
+    var hours = new Date().getHours();
+    var minutes = new Date().getMinutes();
+    // var ampm = hours>= 12 ? 'PM' : 'AM'
+    var date =
+      (hours > 12 ? hours - 12 : hours) +
+      ":" +
+      (minutes < 10 ? "0" + minutes : minutes);
+    console.log(date);
     var newMessage = {
       senderId: userId,
       receiverId: receiverId,
       message: msg,
       ConversationId: message[0].id,
-      createdAt: new Date().toTimeString(),
+      createdAt: date,
     };
     dispatch({
       type: SET_MSG,
       payload: [...message, newMessage],
     });
-    createMsg(newMessage);
     socket.emit("sendMsg", [...message, newMessage]);
-    // console.log(new Date().toTimeString());
   };
 
   useEffect(() => {
