@@ -32,10 +32,6 @@ const Home = () => {
     });
   }, []);
 
-  useEffect(() => {
-    // socket.on('')
-  }, []);
-
   return (
     <div>
       <Header />
