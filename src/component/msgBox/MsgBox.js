@@ -41,11 +41,12 @@ const MsgBox = ({ socket }) => {
   const getTime = () => {
     var hours = new Date().getHours();
     var minutes = new Date().getMinutes();
-    // var ampm = hours>= 12 ? 'PM' : 'AM'
+    var ampm = hours >= 12 ? "PM" : "AM";
     return (
       (hours > 12 ? hours - 12 : hours) +
       ":" +
-      (minutes < 10 ? "0" + minutes : minutes)
+      (minutes < 10 ? "0" + minutes : minutes) +
+      ampm
     );
   };
 
@@ -61,12 +62,16 @@ const MsgBox = ({ socket }) => {
       formData.set("photo", imageFile);
     }
 
-    createMsg(formData);
-    // dispatch({
-    //   type: SET_MSG,
-    //   payload: [...message, newMessage],
-    // });
-    // socket.emit("sendMsg", [...message, newMessage]);
+    createMsg(formData).then((msg) => {
+      if (msg) {
+        dispatch({
+          type: SET_MSG,
+          payload: [...message, msg],
+        });
+
+        socket.emit("sendMsg", [...message, msg]);
+      }
+    });
   };
 
   useEffect(() => {
@@ -114,7 +119,7 @@ const MsgBox = ({ socket }) => {
         <input
           id='uploadImg'
           type='file'
-          accept='image'
+          accept='image/*'
           name='photo'
           className='hidden'
           onChange={(e) => setImageFile(e.target.files[0])}

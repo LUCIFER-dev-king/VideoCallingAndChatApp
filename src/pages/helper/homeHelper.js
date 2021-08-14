@@ -93,7 +93,11 @@ export const createMsg = (msg) => {
   })
     .then((res) => {
       if (res.status === 200) {
-        console.log(res);
+        if (res.data.data === undefined) {
+          return { ...res.data, data: null };
+        } else {
+          return res.data;
+        }
       }
     })
     .catch((err) => {
