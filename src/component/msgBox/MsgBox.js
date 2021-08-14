@@ -4,6 +4,9 @@ import MsgBoxHeader from "./MsgBoxHeader";
 import { UserContext } from "../../context/UserContext";
 import { createMsg } from "../../pages/helper/homeHelper";
 import { SET_MSG } from "../../context/actions.types";
+import axios from "axios";
+import { API } from "../../backend";
+import { FaImage } from "react-icons/fa";
 
 const MsgBox = ({ socket }) => {
   const { state, dispatch } = useContext(UserContext);
@@ -12,6 +15,7 @@ const MsgBox = ({ socket }) => {
   const [isUserActive, setIsUserActive] = useState({});
   const { userId } = JSON.parse(localStorage.getItem("user"));
   const [receiverId, setReceiverId] = useState("");
+  const [imageFile, setImageFile] = useState("");
 
   useEffect(() => {
     if (message.length > 0) {
@@ -34,27 +38,35 @@ const MsgBox = ({ socket }) => {
     }
   }, [message, activeUsers]);
 
-  const onSubmit = () => {
+  const getTime = () => {
     var hours = new Date().getHours();
     var minutes = new Date().getMinutes();
     // var ampm = hours>= 12 ? 'PM' : 'AM'
-    var date =
+    return (
       (hours > 12 ? hours - 12 : hours) +
       ":" +
-      (minutes < 10 ? "0" + minutes : minutes);
-    console.log(date);
-    var newMessage = {
-      senderId: userId,
-      receiverId: receiverId,
-      message: msg,
-      ConversationId: message[0].id,
-      createdAt: date,
-    };
-    dispatch({
-      type: SET_MSG,
-      payload: [...message, newMessage],
-    });
-    socket.emit("sendMsg", [...message, newMessage]);
+      (minutes < 10 ? "0" + minutes : minutes)
+    );
+  };
+
+  const onSubmit = () => {
+    var formData = new FormData();
+    formData.set("senderId", userId);
+    formData.set("receiverId", receiverId);
+    formData.set("ConversationId", message[0].id);
+    formData.set("message", msg);
+    formData.set("createdAt", getTime());
+
+    if (imageFile) {
+      formData.set("photo", imageFile);
+    }
+
+    createMsg(formData);
+    // dispatch({
+    //   type: SET_MSG,
+    //   payload: [...message, newMessage],
+    // });
+    // socket.emit("sendMsg", [...message, newMessage]);
   };
 
   useEffect(() => {
@@ -66,6 +78,21 @@ const MsgBox = ({ socket }) => {
     });
     console.log(message);
   }, []);
+
+  const onImageUpload = () => {
+    // fetch(`${API}/createImg`, {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //   },
+    //   body: formData,
+    // })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => console.log(err));
+    // createImg(formData);
+  };
 
   return (
     <div className='bg-gray-50 h-full'>
@@ -80,6 +107,18 @@ const MsgBox = ({ socket }) => {
       </div>
 
       <div className='p-12 flex justify-between'>
+        <label htmlFor='uploadImg'>
+          <FaImage className='h-10 p-2 w-10 rounded-full bg-gray-200 m-1' />
+        </label>
+
+        <input
+          id='uploadImg'
+          type='file'
+          accept='image'
+          name='photo'
+          className='hidden'
+          onChange={(e) => setImageFile(e.target.files[0])}
+        />
         <input
           type='text'
           placeholder='message'
