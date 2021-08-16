@@ -8,6 +8,7 @@ import Sidebar from "../component/sidebar/Sidebar";
 import Header from "../layout/Header";
 import { getConv } from "./helper/homeHelper";
 import { SET_USERS } from "../context/actions.types";
+import VideoCall from "../videoCall/VideoCall";
 const socket = io.connect(SOCKETIO);
 
 const Home = () => {
@@ -43,7 +44,8 @@ const Home = () => {
           <ChatBox conv={conv} />
         </div>
         <div className='col-span-8'>
-          <MsgBox socket={socket} />
+          {/*<MsgBox socket={socket} />*/}
+          <VideoCall socket={socket} />
         </div>
       </div>
     </div>
