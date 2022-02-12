@@ -81,6 +81,7 @@ const MsgBox = ({ socket, msgRef }) => {
         });
 
         socket.emit("sendMsg", [...message, msg]);
+        setMsg("");
       }
     });
   };
@@ -153,6 +154,7 @@ const MsgBox = ({ socket, msgRef }) => {
             <input
               type="text"
               placeholder="Type your message..."
+              value={msg}
               className="py-2 px-4 w-full mr-2 rounded-full border-2 border-gray focus:border-transparent focus:ring-2 focus:ring-gray focus:outline-none"
               onChange={(e) => setMsg(e.target.value)}
             />
@@ -168,7 +170,7 @@ const MsgBox = ({ socket, msgRef }) => {
       )}
     </div>
   ) : (
-    <div className="flex h-full items-center justify-center">
+    <div className="hidden sm:flex sm:h-full items-center justify-center">
       Select a conversation to message
     </div>
   );

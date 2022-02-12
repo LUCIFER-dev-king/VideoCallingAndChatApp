@@ -12,7 +12,10 @@ import "../index.css";
 const socket = io.connect(SOCKETIO);
 
 const Home = () => {
-  const { dispatch } = useContext(UserContext);
+  const {
+    state: { currentConversation },
+    dispatch,
+  } = useContext(UserContext);
   const history = useHistory();
   const msgRef = useRef("");
   const videoRef = useRef("");
@@ -52,9 +55,15 @@ const Home = () => {
         <div className="w-full sm:w-1/4 z-0 sm:mr-3">
           <ChatBox msgRef={msgRef} socket={socket} />
         </div>
-        <div ref={msgRef} className="w-full h-full z-10 sm:w-3/4 msg">
-          <MsgBox msgRef={msgRef} socket={socket} videoRef={videoRef} />
-        </div>
+        {Object.keys(currentConversation).length > 0 ? (
+          <div ref={msgRef} className="w-full h-full z-10 sm:w-3/4 msg">
+            <MsgBox msgRef={msgRef} socket={socket} videoRef={videoRef} />
+          </div>
+        ) : (
+          <div className="hidden sm:flex h-full w-full items-center justify-center">
+            Select a conversation to message
+          </div>
+        )}
       </div>
     </div>
   );

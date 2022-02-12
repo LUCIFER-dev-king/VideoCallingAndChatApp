@@ -84,7 +84,7 @@ const VideoCall = ({ socket, isReceiverActive }) => {
           }}
         />
       </div>
-      <div className="absolute inset-x-1/2 bottom-4 bg-red">
+      <div className="absolute inset-x-1/3 sm:inset-x-2/4 bottom-4 ">
         <div className="flex">
           <button
             className="px-4 bg-green py-2 mx-2 rounded text-white "

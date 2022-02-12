@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# CHATz
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CHATz is a chat and video call web app built with React and NodeJS.
 
-## Available Scripts
+## Project Overview
 
-In the project directory, you can run:
+Chatz is a web chat application developed with ReactJS, NodeJS, MySQL, Socket.io, and simple-peer. Users can chat with other users, share photos, and also they can make a video call. MySql is used as DB, to send messages instantly socket.io is used and for video call simple-peer which is a simplified version of WebRTC.
 
-### `npm start`
+- After user login the app shows list available users to make conversation.
+- The messages can be sent and received via socket.io connection. It also includes photos which is currently stored in mysql db as Blob.
+- When user click on the video call icon the permission to open camera is asked after granted it shows a small popup with user video and receiver video large canvas.
+- Backend API url [https://github.com/LUCIFER-dev-king/VideoCallingAndChatApp-Backend](https://github.com/LUCIFER-dev-king/VideoCallingAndChatApp-Backend).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Functionlity
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Send and Receive message
+- Make a video call
+- Send photos along with messages
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<b>Frontned</b>: Reactjs
+<br>
+<b>Styling</b>: Tailwind CSS
+<br>
+<b>Database</b>: MySQL
+<br>
+<b>Authentication and Authorisation</b>: JWT Tokens
+<br>
+<b>Sned and Receive message</b>: Socket.io
+<br>
+<b>Video Call</b>: Simple-Peer (WebRTC)
+<br>
 
-### `npm run build`
+## Application Links
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Deployed URL -> [https://videocallandchat.netlify.app/](https://videocallandchat.netlify.app/)
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Devloped and Maintained By
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+📸 [Instagram](https://www.instagram.com/lucifer_the_king/?hl=en) <br />
+🧳 [LinkedIn](https://www.linkedin.com/in/nihal-ahamed-m-s-7b6808190/)
+<br>
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**MADE WITH 💖, HAPPY CODING!**
