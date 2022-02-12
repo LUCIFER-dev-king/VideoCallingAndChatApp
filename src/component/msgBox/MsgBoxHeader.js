@@ -1,18 +1,34 @@
 import React from "react";
-import { FaAddressCard } from "react-icons/fa";
+import { FaVideo, FaUser, FaBackward, FaArrowLeft } from "react-icons/fa";
 
-const MsgBoxHeader = ({ isUserActive }) => {
+const MsgBoxHeader = ({ isReceiverActive, msgRef }) => {
+  console.log(isReceiverActive);
   return (
-    <div className=' flex flex-row justify-start p-4'>
-      <FaAddressCard className='h-10 p-2 w-10 rounded-full bg-gray-200'>
-        Profile
-      </FaAddressCard>
-      <div className='my-auto px-2 text-xl font-bold'>text</div>
-      {isUserActive.userId ? (
-        <div className=' px-2 text-xl font-bold'>Online</div>
-      ) : (
-        <div className=' px-2 text-xl font-bold'>Offline</div>
-      )}
+    <div className=" flex flex-row justify-start items-center px-4 py-1 border-b-2 border-primary w-full">
+      <div class="p-3 rounded-full bg-primary mr-3 block sm:hidden">
+        <FaArrowLeft
+          className="text-xl"
+          onClick={() => (msgRef.current.style.width = "0")}
+        />
+      </div>
+      <div class="p-3 rounded-full bg-primary">
+        <FaUser className="text-2xl" />
+      </div>
+      <div class="w-full flex justify-between items-center">
+        <div class="flex flex-col ml-4">
+          <div className="my-auto text-lg font-bold">
+            {isReceiverActive.username}
+          </div>
+          {isReceiverActive.active ? (
+            <div className="text-lg font">Online</div>
+          ) : (
+            <div className="text-lg font">Offline</div>
+          )}
+        </div>
+        <div class="p-3 rounded-full hover:bg-primary mr-3 cursor-pointer">
+          <FaVideo className="text-xl" />
+        </div>
+      </div>
     </div>
   );
 };

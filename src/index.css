@@ -1,9 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+#chatScrollbar::-webkit-scrollbar {
+  width: 10px;
+  opacity: 0.1;
+}
+
+#chatScrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+  opacity: 0.1;
+}
+
+#chatScrollbar::-webkit-scrollbar-thumb {
+  background-color: #aeb5c2;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 480px) {
+  .msg {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: 0.2s ease-in-out;
+  }
 }

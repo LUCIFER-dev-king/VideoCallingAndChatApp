@@ -1,14 +1,45 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { getUserFromStorage } from "../../auth/helper/authHelper";
+import { UserContext } from "../../context/UserContext";
+import Header from "../../layout/Header";
 import ChatCard from "./ChatCard";
 
-const ChatBox = ({ conv }) => {
+const ChatBox = ({ msgRef, socket }) => {
+  const {
+    state: { activeUsers, conv },
+  } = useContext(UserContext);
+  const { userId } = getUserFromStorage();
+  const [availableUsers, setAvailableUsers] = useState("");
+
+  useEffect(() => {
+    console.log("activeuser", activeUsers);
+    if (conv.length === 0) {
+      var users = [];
+      //
+    }
+  }, []);
+
   return (
-    <div className='bg-gray-100 shadow-md h-full flex flex-col justify-start content-center'>
-      <div className='p-5 text-2xl font-bold'>Chat</div>
-      <hr />
-      {conv.map((c, i) => (
-        <ChatCard key={i} currrentConv={c} />
-      ))}
+    <div className="bg-white h-full shadow-md flex flex-col justify-start content-center rounded-xl ">
+      <Header />
+      <div id="chatScrollbar" className="flex flex-col overflow-x-auto">
+        {conv.length > 0 ? (
+          conv.map((c, i) => (
+            <ChatCard key={i} currentConv={c} msgRef={msgRef} />
+          ))
+        ) : (
+          <h4 className="ml-5">No conversation found</h4>
+        )}
+
+        <h4 className="ml-5 mt-5 font-semibold">Available Users</h4>
+        {activeUsers.length > 0 &&
+          activeUsers.map(
+            (user, id) =>
+              user.userId !== userId && (
+                <ChatCard availableUsers={user.user} msgRef={msgRef} key={id} />
+              )
+          )}
+      </div>
     </div>
   );
 };

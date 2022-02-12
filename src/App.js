@@ -1,4 +1,3 @@
-import "./App.css";
 import Routes from "./Routes";
 import reducer from "./context/reducer";
 import React, { useReducer } from "react";
@@ -6,6 +5,8 @@ import { UserContext } from "./context/UserContext";
 
 const initialState = {
   message: [],
+  conv: [],
+  currentConversation: {},
   activeUsers: [],
 };
 

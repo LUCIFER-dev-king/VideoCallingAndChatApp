@@ -47,3 +47,14 @@ export const signIn = (user) => {
       console.log(err);
     });
 };
+
+export const getUserFromStorage = () => {
+  if (typeof window == "undefined") {
+    return false;
+  }
+  if (localStorage.getItem("user")) {
+    return JSON.parse(localStorage.getItem("user"));
+  } else {
+    return false;
+  }
+};

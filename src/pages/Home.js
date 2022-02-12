@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 import { SOCKETIO } from "../backend";
 import { io } from "socket.io-client";
@@ -6,18 +6,40 @@ import ChatBox from "../component/chatBox/ChatBox";
 import MsgBox from "../component/msgBox/MsgBox";
 import Sidebar from "../component/sidebar/Sidebar";
 import Header from "../layout/Header";
-import { getConv } from "./helper/homeHelper";
-import { SET_USERS } from "../context/actions.types";
+import { getConv, getUser } from "./helper/homeHelper";
+import { SET_CONVERSATION, SET_USERS } from "../context/actions.types";
 import VideoCall from "../videoCall/VideoCall";
+import { useHistory } from "react-router-dom";
+import "../index.css";
+
 const socket = io.connect(SOCKETIO);
 
 const Home = () => {
   const { dispatch } = useContext(UserContext);
-  var { userId } = JSON.parse(localStorage.getItem("user"));
+  const history = useHistory();
+  const msgRef = useRef("");
 
   useEffect(() => {
-    socket.emit("addUser", userId);
+    getUser();
+  }, []);
 
+  useEffect(() => {
+    var user = localStorage.getItem("user");
+    if (user !== null) {
+      const { userId } = JSON.parse(user);
+      getConv(userId).then((data) => {
+        dispatch({
+          type: SET_CONVERSATION,
+          payload: data,
+        });
+      });
+      socket.emit("addUser", userId);
+    } else {
+      // history.push("/signin");
+    }
+  }, []);
+
+  useEffect(() => {
     socket.on("activeUsers", (users) => {
       dispatch({
         type: SET_USERS,
@@ -26,26 +48,16 @@ const Home = () => {
     });
   }, []);
 
-  const [conv, setConv] = useState([]);
-  useEffect(() => {
-    getConv(userId).then((data) => {
-      setConv(data);
-    });
-  }, []);
-
   return (
-    <div>
-      <Header />
-      <div className='grid grid-cols-12 h-screen'>
-        <div className='col-span-0'>
-          <Sidebar />
+    <div className="container-2xl h-screen bg-primary p-4 ">
+      <div className="relative sm:flex w-full h-full">
+        <div className="w-full sm:w-1/4 z-0 sm:mr-3">
+          <ChatBox msgRef={msgRef} socket={socket} />
         </div>
-        <div className='col-span-3'>
-          <ChatBox conv={conv} />
-        </div>
-        <div className='col-span-8'>
-          {/*<MsgBox socket={socket} />*/}
-          <VideoCall socket={socket} />
+        <div ref={msgRef} className="w-full h-full z-10 sm:w-3/4 msg">
+          {/**/}
+          <MsgBox msgRef={msgRef} socket={socket} />
+          {/*<VideoCall socket={socket} />*/}
         </div>
       </div>
     </div>

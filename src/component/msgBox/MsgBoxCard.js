@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
+
 const MsgBoxCard = ({ msg }) => {
   const { userId } = JSON.parse(localStorage.getItem("user"));
-  const { senderId, message, createdAt, data } = msg;
+  const { senderId, message, data, created } = msg;
   const image = useRef("");
+
   useEffect(() => {
     if (data !== null) {
       var arrayBuffer = data.data;
@@ -16,45 +18,32 @@ const MsgBoxCard = ({ msg }) => {
     }
   }, []);
 
-  const getTime = (time) => {
-    var hours = time.substring(11, 13);
-    var minutes = time.substring(14, 16);
-    var ampm = hours >= 12 ? "PM" : "AM";
-    return (
-      (hours > 12 ? hours - 12 : hours) +
-      ":" +
-      (minutes < 10 ? "0" + minutes : minutes) +
-      " " +
-      ampm
-    );
-  };
-
   return senderId == userId ? (
-    <div className='flex  justify-end'>
+    <li className="flex justify-end">
       {data !== null ? (
-        <div className='m-1 w-60 h-min border-4 rounded bg-gray-200'>
-          <img ref={image} className='bg-cover bg-no-repeat bg-center' />
+        <div className="m-1 w-60 h-min border-4 rounded bg-gray-200">
+          <img ref={image} className="bg-cover bg-no-repeat bg-center" />
         </div>
       ) : (
-        <div className='m-1 px-5 py-2 bg-gray-200 rounded'>
-          {message} <br />{" "}
-          <span className='text-white'>{getTime(createdAt)}</span>
+        <div className="m-1 px-5 pl-5 pr-10 py-2  rounded-t-3xl rounded-l-3xl bg-primary">
+          <p className="">{message} </p>
+          <span className="text-gray">{created}</span>
         </div>
       )}
-    </div>
+    </li>
   ) : (
-    <div className='flex justify-start'>
+    <li className="flex justify-start px-6">
       {data !== null ? (
-        <div className='m-1 w-60 h-min border-4 rounded bg-gray-200'>
-          <img ref={image} className='bg-cover bg-no-repeat bg-center' />
+        <div className="m-1 w-60 h-min border-4 rounded bg-gray-200">
+          <img ref={image} className="bg-cover bg-no-repeat bg-center" />
         </div>
       ) : (
-        <div className='m-1 px-5 py-2 bg-gray-200 rounded'>
-          {message} <br />{" "}
-          <span className='text-white'>{getTime(createdAt)}</span>
+        <div className="m-1 pl-5 pr-10 py-2 bg-secondary rounded-t-3xl rounded-r-3xl">
+          <p className="text-white">{message} </p>
+          <span className="text-gray">{created}</span>
         </div>
       )}
-    </div>
+    </li>
   );
 };
 

@@ -1,42 +1,81 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaAddressCard } from "react-icons/fa";
-import { getMsg, getUser } from "../../pages/helper/homeHelper";
+import { FaAddressCard, FaUser } from "react-icons/fa";
+import { createConv, getMsg, getUser } from "../../pages/helper/homeHelper";
 import { UserContext } from "../../context/UserContext";
-import { SET_MSG } from "../../context/actions.types";
+import {
+  SET_CONVERSATION,
+  SET_CURRENT_CONVERSATION,
+  SET_MSG,
+} from "../../context/actions.types";
+import { getUserFromStorage } from "../../auth/helper/authHelper";
 
-const ChatCard = ({ currrentConv }) => {
+const ChatCard = ({ currentConv, msgRef, availableUsers }) => {
   const [user, setUser] = useState({});
-  const { dispatch } = useContext(UserContext);
+  const {
+    state: { conv },
+    dispatch,
+  } = useContext(UserContext);
   const { userId } = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    // console.log(currrentConv);
-    if (userId == currrentConv.receiverId) {
-      getUser(currrentConv.UserId).then((data) => setUser(data));
+    // console.log(currentConv);
+    if (currentConv !== undefined) {
+      if (userId == currentConv.receiverId) {
+        getUser(currentConv.UserId).then((data) => setUser(data));
+      } else {
+        getUser(currentConv.receiverId).then((data) => setUser(data));
+      }
     } else {
-      getUser(currrentConv.receiverId).then((data) => setUser(data));
+      setUser(availableUsers);
     }
   }, []);
 
   const onClickConv = () => {
-    getMsg(currrentConv.id).then((data) => {
-      dispatch({
-        type: SET_MSG,
-        payload: data,
+    if (currentConv !== undefined) {
+      const { userId, username } = getUserFromStorage();
+
+      getMsg(currentConv.id).then((data) => {
+        dispatch({
+          type: SET_MSG,
+          payload: data,
+        });
+        msgRef.current.style.width = "100%";
       });
-    });
+      dispatch({
+        type: SET_CURRENT_CONVERSATION,
+        payload: {
+          sender: { userId, username },
+          currentConv,
+          receiver: user,
+        },
+      });
+    } else {
+      // console.log(conv.some((c) => c.UserId === userId));
+      // console.log(conv.some((c) => c.receiverId === userId));
+      var coversationLinkId = Number(userId + user.id);
+      if (!conv.some((c) => c.coversationLinkId === coversationLinkId)) {
+        createConv({ userId, receiverId: user.id, coversationLinkId }).then(
+          (data) => {
+            dispatch({
+              type: SET_CONVERSATION,
+              payload: [...conv, data.conv],
+            });
+          }
+        );
+      }
+    }
   };
   return (
     <div
-      className='p-3 bg-white flex flex-row justify-start hover:bg-gray-50'
+      className="p-3 bg-white hover:bg-primary cursor-pointer flex flex-row justify-start items-center hover:bg-gray-50 rounded-xl"
       onClick={onClickConv}
     >
-      <FaAddressCard className='h-10 p-2 w-10 rounded-full bg-gray-100'>
-        Profile
-      </FaAddressCard>
-      <div className='flex flex-col justify-start px-2'>
-        <div>{user.username}</div>
-        <div>text2</div>
+      <div class="p-3 rounded-full bg-primary">
+        <FaUser className="text-2xl" />
+      </div>
+      <div className="flex flex-col justify-start mx-4 border-b-2 border-primary w-full ">
+        <h4 className="font-semibold text-lg">{user.username}</h4>
+        <h5>Hi...</h5>
       </div>
     </div>
   );

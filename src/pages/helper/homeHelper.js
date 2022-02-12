@@ -12,6 +12,7 @@ export const getUser = (id) => {
   })
     .then((res) => {
       if (res.status === 200) {
+        console.log(res.data);
         return res.data;
       }
     })
@@ -78,6 +79,26 @@ export const getMsg = (convId) => {
 //       console.log(err);
 //     });
 // };
+
+export const createConv = (conv) => {
+  return axios({
+    method: "post",
+    url: `${API}/createConv`,
+    headers: {
+      Accept: "application/json",
+    },
+    data: conv,
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        // console.log(res.data);
+        return res.data;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 export const createMsg = (msg) => {
   return axios({

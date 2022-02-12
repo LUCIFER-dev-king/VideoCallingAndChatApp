@@ -1,2 +1,4 @@
 export const SET_MSG = "SET_MSG";
+export const SET_CONVERSATION = "SET_CONVERSATION";
+export const SET_CURRENT_CONVERSATION = "SET_CURRENT_CONVERSATION";
 export const SET_USERS = "SET_USERS";
