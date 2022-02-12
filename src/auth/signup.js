@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { signUp } from "./helper/authHelper";
-import { Link, useHistory } from "react-router-dom";
-import { API } from "../backend";
+import { useHistory } from "react-router-dom";
 
 const SignUp = () => {
   const history = useHistory();
@@ -10,7 +9,11 @@ const SignUp = () => {
   const [username, setUserName] = useState("");
 
   const handleSignUpSubmit = (e) => {
-    signUp({ email, username, password });
+    signUp({ email, username, password }).then((res) => {
+      if (res.status === 200) {
+        history.push("/signin");
+      }
+    });
   };
 
   return (
@@ -60,12 +63,12 @@ const SignUp = () => {
           Sign Up
         </button>
 
-        <a
+        {/*<a
           href={`${API}/auth/google`}
           className="w-100 text-center rounded text-white bg-secondary p-2 font-semibold mt-3"
         >
           Sing up with Google
-        </a>
+        </a>*/}
         <div className="mt-2 text-gray text-center font-normal">
           Already have an account, <a href="/signin">Sign In</a>
         </div>

@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { UserContext } from "../context/UserContext";
+import React, { useState, useEffect, useRef } from "react";
 import Peer from "simple-peer";
 
-const VideoCall = ({ socket }) => {
-  const { state, dispatch } = useContext(UserContext);
-  const { activeUsers } = state;
+const VideoCall = ({ socket, isReceiverActive }) => {
   const userVideo = useRef();
   const receiverVideo = useRef("");
   var { userId } = JSON.parse(localStorage.getItem("user"));
@@ -62,41 +59,55 @@ const VideoCall = ({ socket }) => {
   };
 
   return (
-    <div className='bg-gray-200 h-screen flex flex-col justify-center'>
-      <div className='flex justify-center'>
-        <video
-          playsInline
-          autoPlay
-          muted
-          ref={userVideo}
-          className='h-96 w-96 m-4'
-        ></video>
+    <div className="relative bg-gray-200 w-full h-full overflow-hidden">
+      <div className="w-full h-full">
         <video
           ref={receiverVideo}
           playsInline
           autoPlay
           muted
-          className='h-96 w-96 m-4'
+          className="w-full h-full"
+          style={{
+            objectFit: "cover",
+          }}
         ></video>
       </div>
-      <div className='flex justify-evenly'>
-        <button
-          className='px-4 bg-black rounded text-white '
-          onClick={() => {
-            callUser(2);
+      <div className="absolute right-8 bottom-8 w-48 h-32 bg-red">
+        <video
+          playsInline
+          autoPlay
+          muted
+          ref={userVideo}
+          className="w-full h-full"
+          style={{
+            objectFit: "cover",
           }}
-        >
-          Call
-        </button>
-        {currentCall.isCallingComing && (
+        />
+      </div>
+      <div className="absolute inset-x-1/2 bottom-4 bg-red">
+        <div className="flex">
           <button
-            className='px-4 bg-black rounded text-white '
-            onClick={answerCall}
+            className="px-4 bg-green py-2 mx-2 rounded text-white "
+            onClick={() => {
+              callUser(isReceiverActive.id);
+            }}
           >
-            Answer Call
+            Call
           </button>
-        )}
-        <button className='px-4 bg-black rounded text-white '>End Call</button>
+          <div>
+            {currentCall.isCallingComing && (
+              <button
+                className="px-4 bg-green py-2 mx-2 rounded text-white whitespace-nowrap"
+                onClick={answerCall}
+              >
+                Answer Call
+              </button>
+            )}
+          </div>
+          <button className="px-4 py-2 mx-2 bg-red rounded text-white whitespace-nowrap">
+            End Call
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -12,9 +12,7 @@ export const signUp = (user) => {
     data: JSON.stringify(user),
   })
     .then((res) => {
-      if (res.status === 200) {
-        console.log("signup succes");
-      }
+      return res;
     })
     .catch((err) => {
       console.log(err);
@@ -41,6 +39,7 @@ export const signIn = (user) => {
           username: res.data.dataValues.username,
         };
         localStorage.setItem("user", JSON.stringify(user));
+        return true;
       }
     })
     .catch((err) => {

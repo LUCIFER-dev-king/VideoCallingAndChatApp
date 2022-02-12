@@ -7,7 +7,7 @@ const Header = () => {
       <div className="flex justify-between items-center">
         <h3 className="font-bold text-4xl">Chatz</h3>
 
-        <div class="p-3 rounded-full hover:bg-primary cursor-pointer">
+        <div className="p-3 rounded-full hover:bg-primary cursor-pointer">
           <FaSignOutAlt className="text-xl" />
         </div>
       </div>

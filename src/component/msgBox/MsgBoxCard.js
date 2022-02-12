@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 const MsgBoxCard = ({ msg }) => {
   const { userId } = JSON.parse(localStorage.getItem("user"));

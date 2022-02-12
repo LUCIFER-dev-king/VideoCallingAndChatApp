@@ -1,23 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { getUserFromStorage } from "../../auth/helper/authHelper";
 import { UserContext } from "../../context/UserContext";
 import Header from "../../layout/Header";
 import ChatCard from "./ChatCard";
 
-const ChatBox = ({ msgRef, socket }) => {
+const ChatBox = ({ msgRef }) => {
   const {
     state: { activeUsers, conv },
   } = useContext(UserContext);
   const { userId } = getUserFromStorage();
-  const [availableUsers, setAvailableUsers] = useState("");
-
-  useEffect(() => {
-    console.log("activeuser", activeUsers);
-    if (conv.length === 0) {
-      var users = [];
-      //
-    }
-  }, []);
 
   return (
     <div className="bg-white h-full shadow-md flex flex-col justify-start content-center rounded-xl ">

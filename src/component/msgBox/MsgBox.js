@@ -4,35 +4,36 @@ import MsgBoxHeader from "./MsgBoxHeader";
 import { UserContext } from "../../context/UserContext";
 import { createMsg } from "../../pages/helper/homeHelper";
 import { SET_MSG } from "../../context/actions.types";
-import axios from "axios";
-import { API } from "../../backend";
-import { FaImage } from "react-icons/fa";
 import { MdPhotoCamera, MdSend } from "react-icons/md";
 import { getUserFromStorage } from "../../auth/helper/authHelper";
+import VideoCall from "../../videoCall/VideoCall";
 
 const MsgBox = ({ socket, msgRef }) => {
   const { state, dispatch } = useContext(UserContext);
   const { message, activeUsers, currentConversation } = state;
   const [msg, setMsg] = useState("");
   const [isReceiverActive, setIsReceiverActive] = useState({});
-
+  const [isVideoCall, setIsVideoCall] = useState(false);
   const [receiverId, setReceiverId] = useState("");
   const [converstaionId, setConversationId] = useState("");
   const [imageFile, setImageFile] = useState("");
 
   useEffect(() => {
+    console.log(Object.keys(currentConversation).length);
     if (Object.keys(currentConversation).length > 0) {
-      console.log(currentConversation);
+      console.log("cov", currentConversation);
       setIsReceiverActive(currentConversation.receiver);
       setReceiverId(currentConversation.receiver.id);
       setConversationId(currentConversation.currentConv.id);
     }
+    if (activeUsers.some((c) => c.userId === receiverId)) {
+      setIsReceiverActive({ ...currentConversation.receiver, active: true });
+    } else {
+      setIsReceiverActive({ ...currentConversation.receiver, active: false });
+    }
     if (message.length > 0) {
-      if (activeUsers.some((c) => c.userId === receiverId)) {
-        setIsReceiverActive({ ...currentConversation.receiver, active: true });
-      } else {
-        setIsReceiverActive({ ...currentConversation.receiver, active: false });
-      }
+      console.log(activeUsers);
+
       // if (user) {
       //   setIsReceiverActive(user);
       // } else {
@@ -45,7 +46,7 @@ const MsgBox = ({ socket, msgRef }) => {
       //   setReceiverId(message[0].senderId);
       // }
     }
-  }, [message, activeUsers, currentConversation]);
+  }, [currentConversation]);
 
   const getTime = () => {
     var hours = new Date().getHours();
@@ -66,7 +67,7 @@ const MsgBox = ({ socket, msgRef }) => {
     formData.set("receiverId", receiverId);
     formData.set("ConversationId", converstaionId);
     formData.set("message", msg);
-    formData.set("createdAt", getTime());
+    formData.set("created", getTime());
 
     if (imageFile) {
       formData.set("photo", imageFile);
@@ -111,50 +112,60 @@ const MsgBox = ({ socket, msgRef }) => {
 
   return Object.keys(currentConversation).length > 0 ? (
     <div className="bg-white rounded-xl h-full shadow-md flex flex-col justify-between ">
-      <MsgBoxHeader msgRef={msgRef} isReceiverActive={isReceiverActive} />
-      <ul id="chatScrollbar" className="flex flex-col px-6 overflow-auto">
-        {message.map((msg, i) => (
-          <MsgBoxCard msgRef={msgRef} msg={msg} key={i} />
-        ))}
-      </ul>
+      <MsgBoxHeader
+        setIsVideoCall={setIsVideoCall}
+        msgRef={msgRef}
+        isReceiverActive={isReceiverActive}
+      />
+      {isVideoCall ? (
+        <VideoCall socket={socket} isReceiverActive={isReceiverActive} />
+      ) : (
+        <ul id="chatScrollbar" className="flex flex-col px-6 overflow-auto">
+          {message.map((msg, i) => (
+            <MsgBoxCard msgRef={msgRef} msg={msg} key={i} />
+          ))}
+        </ul>
+      )}
+      {!isVideoCall && (
+        <div>
+          {message.length === 0 && (
+            <div className="flex justify-center items-center">
+              No messages found
+            </div>
+          )}
+          <div className="flex justify-between px-6 py-2">
+            <label
+              htmlFor="uploadImg"
+              className="p-3 mr-2 rounded-full bg-gray text-white cursor-pointer"
+            >
+              <MdPhotoCamera className="text-2xl" />
+            </label>
 
-      {message.length === 0 && (
-        <div className="flex justify-center items-center">
-          No messages found
+            <input
+              id="uploadImg"
+              type="file"
+              accept="image/*"
+              name="photo"
+              className="hidden"
+              onChange={(e) => setImageFile(e.target.files[0])}
+            />
+
+            <input
+              type="text"
+              placeholder="Type your message..."
+              className="py-2 px-4 w-full mr-2 rounded-full border-2 border-gray focus:border-transparent focus:ring-2 focus:ring-gray focus:outline-none"
+              onChange={(e) => setMsg(e.target.value)}
+            />
+
+            <div
+              onClick={onSubmit}
+              className="p-3 rounded-full bg-secondary text-white cursor-pointer"
+            >
+              <MdSend className="text-2xl" />
+            </div>
+          </div>
         </div>
       )}
-      <div className="flex justify-between px-6 py-2">
-        <label
-          htmlFor="uploadImg"
-          className="p-3 mr-2 rounded-full bg-gray text-white cursor-pointer"
-        >
-          <MdPhotoCamera className="text-2xl" />
-        </label>
-
-        <input
-          id="uploadImg"
-          type="file"
-          accept="image/*"
-          name="photo"
-          className="hidden"
-          onChange={(e) => setImageFile(e.target.files[0])}
-        />
-
-        {/* TODO: Change focus ring colour */}
-        <input
-          type="text"
-          placeholder="Type your message..."
-          className="py-2 px-4 w-full mr-2 rounded-full bg-primary"
-          onChange={(e) => setMsg(e.target.value)}
-        />
-
-        <div
-          onClick={onSubmit}
-          className="p-3 rounded-full bg-secondary text-white cursor-pointer"
-        >
-          <MdSend className="text-2xl" />
-        </div>
-      </div>
     </div>
   ) : (
     <div className="flex h-full items-center justify-center">
@@ -164,4 +175,3 @@ const MsgBox = ({ socket, msgRef }) => {
 };
 
 export default MsgBox;
-//

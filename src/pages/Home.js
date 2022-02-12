@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 import { SOCKETIO } from "../backend";
 import { io } from "socket.io-client";
 import ChatBox from "../component/chatBox/ChatBox";
 import MsgBox from "../component/msgBox/MsgBox";
-import Sidebar from "../component/sidebar/Sidebar";
-import Header from "../layout/Header";
 import { getConv, getUser } from "./helper/homeHelper";
 import { SET_CONVERSATION, SET_USERS } from "../context/actions.types";
-import VideoCall from "../videoCall/VideoCall";
 import { useHistory } from "react-router-dom";
 import "../index.css";
 
@@ -18,6 +15,7 @@ const Home = () => {
   const { dispatch } = useContext(UserContext);
   const history = useHistory();
   const msgRef = useRef("");
+  const videoRef = useRef("");
 
   useEffect(() => {
     getUser();
@@ -35,7 +33,7 @@ const Home = () => {
       });
       socket.emit("addUser", userId);
     } else {
-      // history.push("/signin");
+      history.push("/signin");
     }
   }, []);
 
@@ -55,9 +53,7 @@ const Home = () => {
           <ChatBox msgRef={msgRef} socket={socket} />
         </div>
         <div ref={msgRef} className="w-full h-full z-10 sm:w-3/4 msg">
-          {/**/}
-          <MsgBox msgRef={msgRef} socket={socket} />
-          {/*<VideoCall socket={socket} />*/}
+          <MsgBox msgRef={msgRef} socket={socket} videoRef={videoRef} />
         </div>
       </div>
     </div>

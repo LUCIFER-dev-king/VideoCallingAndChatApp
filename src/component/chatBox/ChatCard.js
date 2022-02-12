@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaAddressCard, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { createConv, getMsg, getUser } from "../../pages/helper/homeHelper";
 import { UserContext } from "../../context/UserContext";
 import {
@@ -18,7 +18,6 @@ const ChatCard = ({ currentConv, msgRef, availableUsers }) => {
   const { userId } = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    // console.log(currentConv);
     if (currentConv !== undefined) {
       if (userId == currentConv.receiverId) {
         getUser(currentConv.UserId).then((data) => setUser(data));
@@ -50,8 +49,6 @@ const ChatCard = ({ currentConv, msgRef, availableUsers }) => {
         },
       });
     } else {
-      // console.log(conv.some((c) => c.UserId === userId));
-      // console.log(conv.some((c) => c.receiverId === userId));
       var coversationLinkId = Number(userId + user.id);
       if (!conv.some((c) => c.coversationLinkId === coversationLinkId)) {
         createConv({ userId, receiverId: user.id, coversationLinkId }).then(
@@ -70,7 +67,7 @@ const ChatCard = ({ currentConv, msgRef, availableUsers }) => {
       className="p-3 bg-white hover:bg-primary cursor-pointer flex flex-row justify-start items-center hover:bg-gray-50 rounded-xl"
       onClick={onClickConv}
     >
-      <div class="p-3 rounded-full bg-primary">
+      <div className="p-3 rounded-full bg-primary">
         <FaUser className="text-2xl" />
       </div>
       <div className="flex flex-col justify-start mx-4 border-b-2 border-primary w-full ">

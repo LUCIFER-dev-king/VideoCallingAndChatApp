@@ -60,26 +60,6 @@ export const getMsg = (convId) => {
     });
 };
 
-// export const createMsg = (msg) => {
-//   return axios({
-//     method: "post",
-//     url: `${API}/createMsg`,
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     data: JSON.stringify(msg),
-//   })
-//     .then((res) => {
-//       if (res.status === 200) {
-//         console.log("message sent");
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
-
 export const createConv = (conv) => {
   return axios({
     method: "post",

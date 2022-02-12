@@ -1,8 +1,7 @@
 import React from "react";
-import { FaVideo, FaUser, FaBackward, FaArrowLeft } from "react-icons/fa";
+import { FaVideo, FaUser, FaArrowLeft } from "react-icons/fa";
 
-const MsgBoxHeader = ({ isReceiverActive, msgRef }) => {
-  console.log(isReceiverActive);
+const MsgBoxHeader = ({ isReceiverActive, msgRef, setIsVideoCall }) => {
   return (
     <div className=" flex flex-row justify-start items-center px-4 py-1 border-b-2 border-primary w-full">
       <div class="p-3 rounded-full bg-primary mr-3 block sm:hidden">
@@ -26,7 +25,7 @@ const MsgBoxHeader = ({ isReceiverActive, msgRef }) => {
           )}
         </div>
         <div class="p-3 rounded-full hover:bg-primary mr-3 cursor-pointer">
-          <FaVideo className="text-xl" />
+          <FaVideo className="text-xl" onClick={() => setIsVideoCall(true)} />
         </div>
       </div>
     </div>

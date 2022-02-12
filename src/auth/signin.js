@@ -1,13 +1,18 @@
-import React, { useContext, useState } from "react";
-import { Link, useHistory, Redirect } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory, Redirect } from "react-router-dom";
 import { signIn } from "./helper/authHelper";
 
 const SignIn = () => {
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignIn = async (e) => {
-    signIn({ email, password });
+    signIn({ email, password }).then((res) => {
+      if (res) {
+        history.push("/");
+      }
+    });
   };
 
   return (
@@ -50,7 +55,6 @@ const SignIn = () => {
           Sign In
         </button>
 
-        <a href="http://www.localhost:8080/api/user">test</a>
         <div className="mt-2 text-gray text-center font-normal">
           Don't have an account, <a href="/signup">Sign Up</a>
         </div>
