@@ -104,7 +104,10 @@ const VideoCall = ({ socket, isReceiverActive }) => {
               </button>
             )}
           </div>
-          <button className="px-4 py-2 mx-2 bg-red rounded text-white whitespace-nowrap">
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 mx-2 bg-red rounded text-white whitespace-nowrap"
+          >
             End Call
           </button>
         </div>

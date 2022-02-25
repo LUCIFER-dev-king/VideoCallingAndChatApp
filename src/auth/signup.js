@@ -24,7 +24,7 @@ const SignUp = () => {
 
       <div
         style={{ boxShadow: "0 25px 25px rgba(0, 0, 0, 0.15)" }}
-        className="w-96 mt-8 flex flex-col rounded p-10"
+        className="w-96 mt-2 flex flex-col rounded p-10"
       >
         <h4 className="text-gray-500 text-center font-semibold">Let's begin</h4>
 
