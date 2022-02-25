@@ -5,6 +5,3 @@ module.exports = {
     },
   },
 };
-
-// REACT_APP_BACKEND = https://videocallchatapp786.herokuapp.com/api
-// REACT_APP_SOCKETIO = https://videocallchatapp786.herokuapp.com/
