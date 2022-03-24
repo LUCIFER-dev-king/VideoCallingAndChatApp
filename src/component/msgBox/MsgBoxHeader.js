@@ -18,6 +18,7 @@ const MsgBoxHeader = ({ isReceiverActive, msgRef, setIsVideoCall }) => {
           <div className="my-auto text-lg font-bold">
             {isReceiverActive.username}
           </div>
+
           {isReceiverActive.active ? (
             <div className="text-lg font">Online</div>
           ) : (

@@ -24,6 +24,7 @@ p {
 #chatScrollbar::-webkit-scrollbar {
   width: 10px;
   opacity: 0.1;
+  scroll-behavior: smooth;
 }
 
 #chatScrollbar::-webkit-scrollbar-track {

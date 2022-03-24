@@ -21,7 +21,7 @@ const MsgBoxCard = ({ msg }) => {
   return senderId == userId ? (
     <li className="flex justify-end">
       {data !== null ? (
-        <div className="m-1 w-60 h-min border-4 rounded bg-gray-200">
+        <div className="m-1 max-w-xs h-min border-4 rounded bg-gray-200">
           <img ref={image} className="bg-cover bg-no-repeat bg-center" />
         </div>
       ) : (
@@ -34,7 +34,7 @@ const MsgBoxCard = ({ msg }) => {
   ) : (
     <li className="flex justify-start px-6">
       {data !== null ? (
-        <div className="m-1 w-60 h-min border-4 rounded bg-gray-200">
+        <div className="m-1 max-w-xs h-min border-4 rounded bg-gray-200">
           <img ref={image} className="bg-cover bg-no-repeat bg-center" />
         </div>
       ) : (

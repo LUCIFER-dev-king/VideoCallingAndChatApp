@@ -7,6 +7,7 @@ const VideoCall = ({ socket, isReceiverActive }) => {
   var { userId } = JSON.parse(localStorage.getItem("user"));
   const [userStream, setUserStream] = useState("");
   const [currentCall, setCurrentCall] = useState({});
+  const [onCall, setOnCall] = useState(false);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -15,9 +16,13 @@ const VideoCall = ({ socket, isReceiverActive }) => {
         userVideo.current.srcObject = userStream;
         setUserStream(userStream);
       });
-    socket.on("callUser", ({ fromId, signal }) => {
-      setCurrentCall({ isCallingComing: true, fromId, signal });
-      console.log(fromId, signal);
+    socket.on("callUser", (call) => {
+      setCurrentCall({
+        isCallingComing: true,
+        fromId: call.fromId,
+        signal: call.signal,
+      });
+      console.log(call);
     });
   }, []);
 
@@ -37,6 +42,8 @@ const VideoCall = ({ socket, isReceiverActive }) => {
     });
 
     peer.signal(currentCall.signal);
+    setCurrentCall((prev) => [{ ...prev, isCallingComing: false }]);
+    setOnCall((prev) => !prev);
   };
 
   const callUser = (id) => {
@@ -56,6 +63,7 @@ const VideoCall = ({ socket, isReceiverActive }) => {
     socket.on("callAccepted", (signal) => {
       peer.signal(signal);
     });
+    setOnCall((prev) => !prev);
   };
 
   return (
@@ -86,14 +94,16 @@ const VideoCall = ({ socket, isReceiverActive }) => {
       </div>
       <div className="absolute inset-x-1/3 sm:inset-x-2/4 bottom-4 ">
         <div className="flex">
-          <button
-            className="px-4 bg-green py-2 mx-2 rounded text-white "
-            onClick={() => {
-              callUser(isReceiverActive.id);
-            }}
-          >
-            Call
-          </button>
+          {!onCall && (
+            <button
+              className="px-4 bg-green py-2 mx-2 rounded text-white "
+              onClick={() => {
+                callUser(isReceiverActive.id);
+              }}
+            >
+              Call
+            </button>
+          )}
           <div>
             {currentCall.isCallingComing && (
               <button
@@ -105,7 +115,10 @@ const VideoCall = ({ socket, isReceiverActive }) => {
             )}
           </div>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              setOnCall((prev) => !prev);
+              window.location.reload();
+            }}
             className="px-4 py-2 mx-2 bg-red rounded text-white whitespace-nowrap"
           >
             End Call

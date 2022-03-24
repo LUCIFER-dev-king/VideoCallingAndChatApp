@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import MsgBoxCard from "./MsgBoxCard";
 import MsgBoxHeader from "./MsgBoxHeader";
 import { UserContext } from "../../context/UserContext";
@@ -17,22 +17,24 @@ const MsgBox = ({ socket, msgRef }) => {
   const [receiverId, setReceiverId] = useState("");
   const [converstaionId, setConversationId] = useState("");
   const [imageFile, setImageFile] = useState("");
+  const [img, setImg] = useState("");
+  const msgBoxRef = useRef("");
 
   useEffect(() => {
-    console.log(Object.keys(currentConversation).length);
     if (Object.keys(currentConversation).length > 0) {
-      console.log("cov", currentConversation);
+      console.log("coversation", currentConversation);
       setIsReceiverActive(currentConversation.receiver);
       setReceiverId(currentConversation.receiver.id);
       setConversationId(currentConversation.currentConv.id);
     }
-    if (activeUsers.some((c) => c.userId === receiverId)) {
+
+    if (activeUsers.some((c) => c.userId === currentConversation.receiver.id)) {
       setIsReceiverActive({ ...currentConversation.receiver, active: true });
     } else {
       setIsReceiverActive({ ...currentConversation.receiver, active: false });
     }
     if (message.length > 0) {
-      console.log(activeUsers);
+      console.log("activeUsers", activeUsers);
 
       // if (user) {
       //   setIsReceiverActive(user);
@@ -82,6 +84,8 @@ const MsgBox = ({ socket, msgRef }) => {
 
         socket.emit("sendMsg", [...message, msg]);
         setMsg("");
+        setImg("");
+        setImageFile("");
       }
     });
   };
@@ -93,8 +97,21 @@ const MsgBox = ({ socket, msgRef }) => {
         payload: msg,
       });
     });
-    console.log(message);
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      try {
+        msgBoxRef.current.scrollTop = msgBoxRef.current.scrollHeight;
+      } catch (error) {
+        console.log("scroll height is assigned");
+      }
+    }, 1000);
+  }, [message.length]);
+
+  const handleEnterkey = (e) => {
+    if (e.key === "Enter") onSubmit();
+  };
 
   const onImageUpload = () => {
     // fetch(`${API}/createImg`, {
@@ -120,13 +137,30 @@ const MsgBox = ({ socket, msgRef }) => {
       />
       {isVideoCall ? (
         <VideoCall socket={socket} isReceiverActive={isReceiverActive} />
+      ) : imageFile ? (
+        <div className="flex justify-center items-center bg-primary h-full">
+          <img
+            src={img}
+            alt="img"
+            className="rounded"
+            style={{
+              width: "500px",
+              height: "400px",
+            }}
+          />
+        </div>
       ) : (
-        <ul id="chatScrollbar" className="flex flex-col px-6 overflow-auto">
-          {message.map((msg, i) => (
-            <MsgBoxCard msgRef={msgRef} msg={msg} key={i} />
-          ))}
+        <ul
+          ref={msgBoxRef}
+          id="chatScrollbar"
+          className="flex flex-col px-6 overflow-auto transition ease-in-out"
+        >
+          {message.map((msg, i) => {
+            return <MsgBoxCard msgRef={msgRef} msg={msg} key={i} />;
+          })}
         </ul>
       )}
+
       {!isVideoCall && (
         <div>
           {message.length === 0 && (
@@ -148,7 +182,10 @@ const MsgBox = ({ socket, msgRef }) => {
               accept="image/*"
               name="photo"
               className="hidden"
-              onChange={(e) => setImageFile(e.target.files[0])}
+              onChange={(e) => {
+                setImageFile(e.target.files[0]);
+                setImg(URL.createObjectURL(e.target.files[0]));
+              }}
             />
 
             <input
@@ -157,6 +194,7 @@ const MsgBox = ({ socket, msgRef }) => {
               value={msg}
               className="py-2 px-4 w-full mr-2 rounded-full border-2 border-gray focus:border-transparent focus:ring-2 focus:ring-gray focus:outline-none"
               onChange={(e) => setMsg(e.target.value)}
+              onKeyDown={handleEnterkey}
             />
 
             <div
